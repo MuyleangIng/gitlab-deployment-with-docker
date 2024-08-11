@@ -1,0 +1,24 @@
+version: '3.6'
+services:
+  gitlab:
+    image: gitlab/gitlab-ee:latest
+    container_name: gitlab
+    restart: always
+    hostname: 'git.istad.co'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://git.istad.co:3248'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2424
+        # letsencrypt['enable'] = true
+        #letsencrypt['contact_emails'] = ['muyleanging@gmail.com']
+        #  nginx['redirect_http_to_https'] = true
+    ports:
+      - '3248:3248'   # Map host port 3250 to container port 80
+      - '3250:443'  # Map host port 3248 to container port 443
+      - '2424:22'   # SSH port
+    volumes:
+      - '$GITLAB_HOME/config:/etc/gitlab'
+      - '$GITLAB_HOME/logs:/var/log/gitlab'
+      - '$GITLAB_HOME/data:/var/opt/gitlab'
+    shm_size: '256m'
+
